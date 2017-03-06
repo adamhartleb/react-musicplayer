@@ -18,6 +18,7 @@ img {
 
 .album {
   user-select: none;
+  pointer-events: none;
   text-align: center;
   margin-top: 20px;
   transition: transform 250ms linear;
@@ -25,6 +26,7 @@ img {
 
 .album img:hover {
   user-select: none;
+  pointer-events: none;
   transition: transform 250ms linear;
   transform: scale(1.05);
   cursor: pointer;
