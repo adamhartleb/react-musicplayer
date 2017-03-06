@@ -27,14 +27,17 @@ export default class App extends Component {
     fetch(`${URL}search?q=${this.state.searchTerm}&type=artist&limit=1`)
       .then(response => {
         response.json().then(json => {
+          console.log(json)
           this.setState({
-            artist: json
+            artist: json,
+            tracks: null
           })
           fetch(`${URL}artists/${json.artists.items[0].id}/top-tracks?country=US`)
             .then(response => {
               response.json().then(json => {
                 this.setState({
-                  tracks: json
+                  tracks: json,
+                  searchTerm: ""
                 })
               })
             })
@@ -43,10 +46,12 @@ export default class App extends Component {
   }
 
   render() {
-    let { searchTerm } = this.props
+    let { searchTerm } = this.state
     return (
       <div className="container">
-        <Search search={searchTerm} updateSearch={this.updateSearch} getTracks={this.getTracks} />
+        <Search 
+          search={searchTerm} updateSearch={this.updateSearch} getTracks={this.getTracks} 
+        />
         <ArtistProfile
           artist={this.state.artist}
           tracks={this.state.tracks}

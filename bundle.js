@@ -9501,13 +9501,16 @@ var App = function (_Component) {
 
       fetch(URL + 'search?q=' + this.state.searchTerm + '&type=artist&limit=1').then(function (response) {
         response.json().then(function (json) {
+          console.log(json);
           _this2.setState({
-            artist: json
+            artist: json,
+            tracks: null
           });
           fetch(URL + 'artists/' + json.artists.items[0].id + '/top-tracks?country=US').then(function (response) {
             response.json().then(function (json) {
               _this2.setState({
-                tracks: json
+                tracks: json,
+                searchTerm: ""
               });
             });
           });
@@ -9517,12 +9520,14 @@ var App = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var searchTerm = this.props.searchTerm;
+      var searchTerm = this.state.searchTerm;
 
       return _react2.default.createElement(
         'div',
         { className: 'container' },
-        _react2.default.createElement(_Search.Search, { search: searchTerm, updateSearch: this.updateSearch, getTracks: this.getTracks }),
+        _react2.default.createElement(_Search.Search, {
+          search: searchTerm, updateSearch: this.updateSearch, getTracks: this.getTracks
+        }),
         _react2.default.createElement(_ArtistProfile2.default, {
           artist: this.state.artist,
           tracks: this.state.tracks
@@ -9589,6 +9594,7 @@ var ArtistProfile = function (_Component) {
 
     _this.state = {
       audioURL: null,
+      title: '',
       playing: false,
       audio: null
     };
@@ -9598,12 +9604,13 @@ var ArtistProfile = function (_Component) {
 
   _createClass(ArtistProfile, [{
     key: 'playAudio',
-    value: function playAudio(url) {
+    value: function playAudio(url, name) {
       var audio = new Audio(url);
       if (!this.state.playing) {
         audio.play();
         this.setState({
           audioURL: url,
+          title: name,
           playing: true,
           audio: audio
         });
@@ -9613,12 +9620,14 @@ var ArtistProfile = function (_Component) {
           audio.play();
           this.setState({
             audioURL: url,
+            title: name,
             playing: true,
             audio: audio
           });
         } else {
           this.setState({
             audioURL: '',
+            title: '',
             playing: false,
             audio: this.state.audio.pause()
           });
@@ -9630,11 +9639,21 @@ var ArtistProfile = function (_Component) {
     value: function render() {
       var _this2 = this;
 
+      var playingTitle = null;
+      if (!this.props.artist) return _react2.default.createElement(
+        'h3',
+        { className: 'before title is-3' },
+        'Search for your favorite Artist.'
+      );
       if (!this.props.tracks) return _react2.default.createElement(
         'h3',
         { className: 'before title is-3' },
-        'Search for your favorite Artist'
+        'Oops! I think you made a mistake.'
       );
+      if (this.state.title) {
+        playingTitle = 'Now playing: ' + this.state.title;
+      }
+
       return _react2.default.createElement(
         'div',
         null,
@@ -9672,6 +9691,22 @@ var ArtistProfile = function (_Component) {
                   'h3',
                   { className: 'title is-3' },
                   this.props.artist.artists.items[0].name
+                ),
+                _react2.default.createElement(
+                  'h4',
+                  { className: 'subtitle is-4' },
+                  'Followers: ',
+                  this.props.artist.artists.items[0].followers.total
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                  'h4',
+                  { className: 'subtitle is-4' },
+                  _react2.default.createElement(
+                    'strong',
+                    null,
+                    playingTitle
+                  )
                 )
               )
             )
@@ -9713,13 +9748,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Gallery = exports.Gallery = function Gallery(_ref) {
   var track = _ref.track,
-      play = _ref.play;
+      play = _ref.play,
+      nowPlaying = _ref.nowPlaying;
 
   return _react2.default.createElement(
     "div",
     { className: "album column is-one-quarter" },
     _react2.default.createElement("img", { onClick: function onClick() {
-        return play(track.preview_url);
+        play(track.preview_url, track.name);
       },
       src: track.album.images[1].url
     }),
@@ -9768,6 +9804,8 @@ var Search = exports.Search = function Search(_ref) {
       _react2.default.createElement("input", { className: "is-large input is-expanded", type: "text",
         value: search, onInput: function onInput(e) {
           return updateSearch(e);
+        }, onKeyPress: function onKeyPress(e) {
+          if (e.charCode == 13) getTracks();
         }
       }),
       _react2.default.createElement(

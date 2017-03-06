@@ -19,11 +19,12 @@ img {
 .album {
   text-align: center;
   margin-top: 20px;
+  transition: transform 250ms linear;
 }
 
 .album img:hover {
+  transition: transform 250ms linear;
   transform: scale(1.05);
-  transition: transform 0.25s ease-in-out;
   cursor: pointer;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }

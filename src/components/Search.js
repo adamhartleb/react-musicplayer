@@ -6,7 +6,7 @@ export const Search = ({ search, updateSearch, getTracks }) => {
       <h1 className="title is-1">Adam's Music Player</h1>
       <div className="search control has-addons">
         <input className="is-large input is-expanded" type="text"
-          value={search} onInput={e => updateSearch(e)}
+          value={search} onInput={e => updateSearch(e)} onKeyPress={e => { if (e.charCode == 13) getTracks()}}
          />
         <button onClick={() => getTracks()} className="is-large button is-info">Search</button>
       </div>
