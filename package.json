@@ -1,0 +1,26 @@
+{
+  "name": "katz3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack-dev-server --inline --hot"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-env": "^1.1.11",
+    "babel-preset-react": "^6.23.0",
+    "bulma": "^0.3.2",
+    "css-loader": "^0.26.2",
+    "extract-text-webpack-plugin": "^2.0.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "sass-loader": "^6.0.2",
+    "style-loader": "^0.13.2",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  }
+}
