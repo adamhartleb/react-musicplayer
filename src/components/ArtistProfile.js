@@ -45,10 +45,12 @@ export default class ArtistProfile extends Component {
   }
 
   render() {
-    let playingTitle = null
-    if (!this.props.artist) return <h3 className="before title is-3">Search for your favorite Artist.</h3>
-    if (!this.props.tracks) return <h3 className="before title is-3">Oops! I think you made a mistake.</h3>
-    if (this.state.title) { playingTitle = `Now playing: ${this.state.title}` }
+    const { artist, tracks } = this.props
+    // INITIAL SEARCH
+    if (!artist) return <h3 className="before title is-3">Search for your favorite Artist.</h3>
+    // IF ARTIST DOES NOT EXIST
+    if (!tracks) return <h3 className="before title is-3">Oops! That artist does not exist, please check your spelling.</h3>
+    let playingTitle = (this.state.title) ? `Now playing: ${this.state.title}` : null
 
     return (
       <div>
@@ -60,20 +62,20 @@ export default class ArtistProfile extends Component {
         <div className="box">
           <article className="media">
             <div className="media-left">
-              <img src={this.props.artist.artists.items[0].images[1].url} />
+              <img src={artist.artists.items[0].images[1].url} />
             </div>
             <div className="media-content">
               <div className="content">
-                <h3 className="title is-3">{this.props.artist.artists.items[0].name}</h3>
-                <h4 className="subtitle is-4">Followers: {this.props.artist.artists.items[0].followers.total}</h4>
+                <h3 className="title is-3">{artist.artists.items[0].name}</h3>
+                <h4 className="subtitle is-4">Followers: {artist.artists.items[0].followers.total}</h4>
                 <br />
-                <h4 className="subtitle is-4"><strong>{ playingTitle }</strong></h4>
+                <h4 className="subtitle is-4"><strong>{playingTitle}</strong></h4>
               </div>
             </div>
           </article>
         </div>
         <div className="columns is-multiline is-mobile">
-          {this.props.tracks.tracks.map((track, idx) => {
+          {tracks.tracks.map((track, idx) => {
             return <Gallery key={idx} play={this.playAudio} track={track} />
           })}
         </div>

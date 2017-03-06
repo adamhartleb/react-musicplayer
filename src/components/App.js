@@ -27,34 +27,40 @@ export default class App extends Component {
     fetch(`${URL}search?q=${this.state.searchTerm}&type=artist&limit=1`)
       .then(response => {
         response.json().then(json => {
-          console.log(json)
-          this.setState({
-            artist: json,
-            tracks: null
-          })
-          fetch(`${URL}artists/${json.artists.items[0].id}/top-tracks?country=US`)
-            .then(response => {
-              response.json().then(json => {
-                this.setState({
-                  tracks: json,
-                  searchTerm: ""
+          let artist = json
+          // IF ARTIST EXISTS, GET TOP 10 TRACKS
+          if (json.artists.items.length !== 0) {
+            fetch(`${URL}artists/${json.artists.items[0].id}/top-tracks?country=US`)
+              .then(response => {
+                response.json().then(json => {
+                  this.setState({
+                    tracks: json,
+                    artist,
+                    searchTerm: ""
+                  })
                 })
               })
+          } else {
+            // IF ARTIST DOES NOT EXIST RETURN NULL FOR TRACKS FOR CONDITIONAL RENDERING
+            this.setState({
+              artist,
+              tracks: null
             })
+          }
         })
       })
   }
 
   render() {
-    let { searchTerm } = this.state
+    const { searchTerm, artist, tracks } = this.state
     return (
       <div className="container">
         <Search 
           search={searchTerm} updateSearch={this.updateSearch} getTracks={this.getTracks} 
         />
         <ArtistProfile
-          artist={this.state.artist}
-          tracks={this.state.tracks}
+          artist={artist}
+          tracks={tracks}
         />
       </div>
     )
