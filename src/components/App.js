@@ -5,25 +5,25 @@ import ArtistProfile from './ArtistProfile'
 const URL = 'https://api.spotify.com/v1/'
 
 export default class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
-      searchTerm: "",
+      searchTerm: '',
       artist: null,
       tracks: null
     }
-    this.updateSearch =  this.updateSearch.bind(this)
+    this.updateSearch = this.updateSearch.bind(this)
     this.getTracks = this.getTracks.bind(this)
   }
 
-  updateSearch(e) {
+  updateSearch (e) {
     this.setState({
       searchTerm: e.target.value
     })
   }
 
-  getTracks() {
+  getTracks () {
     fetch(`${URL}search?q=${this.state.searchTerm}&type=artist&limit=1`)
       .then(response => {
         response.json().then(json => {
@@ -36,7 +36,7 @@ export default class App extends Component {
                   this.setState({
                     tracks: json,
                     artist,
-                    searchTerm: ""
+                    searchTerm: ''
                   })
                 })
               })
@@ -51,17 +51,12 @@ export default class App extends Component {
       })
   }
 
-  render() {
+  render () {
     const { searchTerm, artist, tracks } = this.state
     return (
-      <div className="container">
-        <Search 
-          search={searchTerm} updateSearch={this.updateSearch} getTracks={this.getTracks} 
-        />
-        <ArtistProfile
-          artist={artist}
-          tracks={tracks}
-        />
+      <div className='container'>
+        <Search search={searchTerm} updateSearch={this.updateSearch} getTracks={this.getTracks} />
+        <ArtistProfile artist={artist} tracks={tracks} />
       </div>
     )
   }
